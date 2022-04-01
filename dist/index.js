@@ -17971,12 +17971,12 @@ function token(userId, secret) {
         exp: issuedAt + 300
     }, secret);
 }
-function upload(addonId, version, addon, source) {
+function upload(addonId, addon, source) {
     const form = new form_data();
     form.append('upload', (0,external_fs_.createReadStream)(addon));
     if (source)
         form.append('source', (0,external_fs_.createReadStream)(source));
-    return lib_got(`${API_BASE}/${encodeURIComponent(addonId)}/versions/${encodeURIComponent(version)}`, {
+    return lib_got(`${API_BASE}/${encodeURIComponent(addonId)}/versions/`, {
         method: 'post',
         responseType: 'json',
         body: form
@@ -17988,14 +17988,14 @@ function upload(addonId, version, addon, source) {
 
 
 function fetchManifest(file) {
-    return JSON.parse((0,external_fs_.readFileSync)(file, { encoding: 'utf-8' }));
+    return JSON.parse(readFileSync(file, { encoding: 'utf-8' }));
 }
 const addonId = core.getInput('addonId');
 const addonFile = core.getInput('addonFile');
 const sourceFile = core.getInput('sourceFile');
 const manifestFile = core.getInput('manifestFile');
 try {
-    upload(addonId, fetchManifest(manifestFile).version, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it)));
+    upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it)));
 }
 catch (e) {
     core.error(JSON.stringify(e));

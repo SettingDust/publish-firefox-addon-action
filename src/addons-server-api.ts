@@ -16,11 +16,11 @@ export function token(userId: string, secret: string) {
   }, secret)
 }
 
-export function upload(addonId: string, version: string, addon: PathLike, source?: PathLike) {
+export function upload(addonId: string, addon: PathLike, source?: PathLike) {
   const form = new FormData()
   form.append('upload', createReadStream(addon))
   if (source) form.append('source', createReadStream(source))
-  return got(`${API_BASE}/${encodeURIComponent(addonId)}/versions/${encodeURIComponent(version)}`, {
+  return got(`${API_BASE}/${encodeURIComponent(addonId)}/versions/`, {
     method: 'post',
     responseType: 'json',
     body: form
