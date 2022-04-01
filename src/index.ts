@@ -11,4 +11,8 @@ const addonFile = core.getInput('addonFile')
 const sourceFile = core.getInput('sourceFile')
 const manifestFile = core.getInput('manifestFile')
 
-upload(addonId, fetchManifest(manifestFile).version, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it)))
+try {
+  upload(addonId, fetchManifest(manifestFile).version, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it)))
+} catch (e) {
+  core.error(JSON.stringify(e))
+}
