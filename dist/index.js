@@ -17994,12 +17994,7 @@ const addonId = core.getInput('addonId');
 const addonFile = core.getInput('addonFile');
 const sourceFile = core.getInput('sourceFile');
 const manifestFile = core.getInput('manifestFile');
-try {
-    upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it)));
-}
-catch (e) {
-    core.error(JSON.stringify(e));
-}
+upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it))).catch(e => core.error(e));
 //# sourceMappingURL=index.js.map
 })();
 
