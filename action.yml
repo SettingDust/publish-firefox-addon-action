@@ -1,0 +1,24 @@
+name: Publish Firefox Addon
+description: Publish the addon to Firefox Addon Store
+author: SettingDust
+runs:
+  using: node16
+  main: dist/index.js
+branding:
+  icon: 'package'
+inputs:
+  addonId:
+    required: true
+    description: 'Number id, guid or slug of addon'
+  jwtIssuer:
+    required: true
+    description: 'Set this to the API key you generated on the credentials management page. For example: user:543210:23.'
+  jwtSecret:
+    required: true
+    description: 'JWT secret generated on the credentials management page'
+  addonFile:
+    required: true
+    description: 'File path of the addon file. Should be a zip. (xpi is zip)'
+  sourceFile:
+    required: true
+    description: 'File path of source. Should be a zip'
