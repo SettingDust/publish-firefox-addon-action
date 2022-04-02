@@ -22,13 +22,33 @@ export function token(userId: string, secret: string) {
   }, secret)
 }
 
-export function upload(addonId: string, addon: ReadStream, source?: ReadStream) {
+export function create(addonId: string, uploadId: string, source?: ReadStream) {
   const form = new FormData()
-  form.append('upload', addon)
+  form.append('upload', uploadId)
   if (source) form.append('source', source)
   return got(`addon/${encodeURIComponent(addonId)}/versions/`, {
     method: 'post',
     responseType: 'json',
     body: form
   })
+}
+
+export function upload(addonId: string, addon: ReadStream) {
+  const form = new FormData()
+  form.append('upload', addon)
+  return got(`/api/v5/addons/upload/`, {
+    method: 'post',
+    responseType: 'json',
+    body: form
+  })
+}
+
+export interface UploadResponse {
+  uuid: string
+  channel: 'listed' | 'unlisted'
+  processed: boolean
+  submitted: boolean
+  valid: boolean
+  validation: object
+  version: string
 }
