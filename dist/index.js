@@ -17940,7 +17940,7 @@ function addons_server_api_create(addonId, uploadId, source) {
 function upload(addonId, addon) {
     const form = new form_data();
     form.append('upload', addon);
-    return addons_server_api_got(`/api/v5/addons/upload/`, {
+    return addons_server_api_got(`api/v5/addons/upload/`, {
         method: 'post',
         responseType: 'json',
         body: form
