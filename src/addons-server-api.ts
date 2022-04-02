@@ -28,9 +28,12 @@ export function create(addonId: string, uploadId: string, source?: ReadStream) {
   if (source) form.append('source', source)
   return got(`addon/${encodeURIComponent(addonId)}/versions/`, {
     method: 'post',
-    responseType: 'json',
     body: form
-  })
+  }).json()
+}
+
+export function uploadDetail(uuid: string) {
+  return got(`upload/${uuid}`).json<UploadResponse>()
 }
 
 export function upload(addon: ReadStream, channel: string) {
@@ -39,9 +42,8 @@ export function upload(addon: ReadStream, channel: string) {
   form.append('channel', channel)
   return got(`upload/`, {
     method: 'post',
-    responseType: 'json',
     body: form
-  })
+  }).json<UploadResponse>()
 }
 
 export interface UploadResponse {

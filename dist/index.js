@@ -13759,11 +13759,11 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("zlib");
 
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
-  "Ue": () => (/* binding */ addons_server_api_create),
-  "ws": () => (/* binding */ upload)
+  "ws": () => (/* binding */ upload),
+  "RM": () => (/* binding */ uploadDetail)
 });
 
-// UNUSED EXPORTS: token
+// UNUSED EXPORTS: create, token
 
 // EXTERNAL MODULE: ./node_modules/jsonwebtoken/index.js
 var jsonwebtoken = __nccwpck_require__(7486);
@@ -17927,15 +17927,17 @@ function token(userId, secret) {
     }, secret);
 }
 function addons_server_api_create(addonId, uploadId, source) {
-    const form = new form_data();
+    const form = new FormData();
     form.append('upload', uploadId);
     if (source)
         form.append('source', source);
     return addons_server_api_got(`addon/${encodeURIComponent(addonId)}/versions/`, {
         method: 'post',
-        responseType: 'json',
         body: form
-    });
+    }).json();
+}
+function uploadDetail(uuid) {
+    return addons_server_api_got(`upload/${uuid}`).json();
 }
 function upload(addon, channel) {
     const form = new form_data();
@@ -17943,9 +17945,8 @@ function upload(addon, channel) {
     form.append('channel', channel);
     return addons_server_api_got(`upload/`, {
         method: 'post',
-        responseType: 'json',
         body: form
-    });
+    }).json();
 }
 //# sourceMappingURL=addons-server-api.js.map
 
@@ -17986,14 +17987,27 @@ if (sourceFile?.length) {
 try {
     const uploadResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .upload */ .ws)((0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(addonFile), channel).json();
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(`Upload Response:
-  ${JSON.stringify(uploadResponse, undefined, 2)}`);
-    const createResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .create */ .Ue)(addonId, uploadResponse.uuid, sourceFile?.length ? (0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(sourceFile) : undefined);
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(JSON.stringify(createResponse.body));
+  ${JSON.stringify(uploadResponse, undefined, '  ')}`);
+    await new Promise((resolve, reject) => {
+        const task = setInterval(async () => {
+            const detail = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .uploadDetail */ .RM)(uploadResponse.uuid);
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(JSON.stringify(detail));
+            if (detail.valid) {
+                resolve(detail);
+                clearInterval(task);
+            }
+            else if (detail.validation) {
+                reject(detail.validation);
+            }
+        }, 500);
+    }).catch(validation => _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(`Upload is valid: ${JSON.stringify(validation)}`));
+    // const createResponse = await create(addonId, uploadResponse.uuid, sourceFile?.length ? createReadStream(sourceFile) : undefined)
+    // core.debug(JSON.stringify(createResponse))
 }
 catch (it) {
     const e = it;
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(`Url: ${e.request.requestUrl}`);
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(`Response: ${JSON.stringify(e.response.body, undefined, 2)}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(`Response: ${JSON.stringify(e.response.body, undefined, '  ')}`);
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(e);
 }
 //# sourceMappingURL=index.js.map
