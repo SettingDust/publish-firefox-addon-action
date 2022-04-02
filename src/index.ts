@@ -29,14 +29,14 @@ if (sourceFile?.length) {
   Size: ${sourceStats.size}`)
 }
 
-const uploadResponse = await upload(addonId, createReadStream(addonFile)).json<UploadResponse>()
-
-core.info(
-  `Upload Response:
-  ${JSON.stringify(uploadResponse, undefined, 2)}`
-)
-
 try {
+  const uploadResponse = await upload(createReadStream(addonFile)).json<UploadResponse>()
+
+  core.debug(
+    `Upload Response:
+  ${JSON.stringify(uploadResponse, undefined, 2)}`
+  )
+
   const createResponse = await create(addonId, uploadResponse.uuid, sourceFile?.length ? createReadStream(sourceFile) : undefined)
   core.debug(JSON.stringify(createResponse.body))
 } catch (it) {

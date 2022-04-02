@@ -17937,7 +17937,7 @@ function addons_server_api_create(addonId, uploadId, source) {
         body: form
     });
 }
-function upload(addonId, addon) {
+function upload(addon) {
     const form = new form_data();
     form.append('upload', addon);
     return addons_server_api_got(`api/v5/addons/upload/`, {
@@ -17981,10 +17981,10 @@ if (sourceFile?.length) {
   isFile: ${sourceStats.isFile()}
   Size: ${sourceStats.size}`);
 }
-const uploadResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .upload */ .ws)(addonId, (0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(addonFile)).json();
-_actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Upload Response:
-  ${JSON.stringify(uploadResponse, undefined, 2)}`);
 try {
+    const uploadResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .upload */ .ws)((0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(addonFile)).json();
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(`Upload Response:
+  ${JSON.stringify(uploadResponse, undefined, 2)}`);
     const createResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .create */ .Ue)(addonId, uploadResponse.uuid, sourceFile?.length ? (0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(sourceFile) : undefined);
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(JSON.stringify(createResponse.body));
 }

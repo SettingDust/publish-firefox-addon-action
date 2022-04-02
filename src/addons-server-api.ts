@@ -33,7 +33,7 @@ export function create(addonId: string, uploadId: string, source?: ReadStream) {
   })
 }
 
-export function upload(addonId: string, addon: ReadStream) {
+export function upload(addon: ReadStream) {
   const form = new FormData()
   form.append('upload', addon)
   return got(`api/v5/addons/upload/`, {
