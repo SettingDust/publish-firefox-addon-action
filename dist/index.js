@@ -13804,6 +13804,10 @@ var __webpack_exports__ = {};
 
 // EXTERNAL MODULE: ./node_modules/jsonwebtoken/index.js
 var jsonwebtoken = __nccwpck_require__(7486);
+// EXTERNAL MODULE: ./node_modules/form-data/lib/form_data.js
+var form_data = __nccwpck_require__(4334);
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(7147);
 // EXTERNAL MODULE: ./node_modules/@sindresorhus/is/dist/index.js
 var dist = __nccwpck_require__(7678);
 ;// CONCATENATED MODULE: external "node:events"
@@ -17940,27 +17944,18 @@ const got = source_create(defaults);
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(2186);
-;// CONCATENATED MODULE: ./lib/got.js
-
-
-
-const got_got = got_dist_source.extend({
-    headers: {
-        Authorization: `JWT ${token(core.getInput('jwtIssuer'), core.getInput('jwtSecret'))}`
-    }
-});
-/* harmony default export */ const lib_got = (got_got);
-//# sourceMappingURL=got.js.map
-// EXTERNAL MODULE: ./node_modules/form-data/lib/form_data.js
-var form_data = __nccwpck_require__(4334);
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(7147);
 ;// CONCATENATED MODULE: ./lib/addons-server-api.js
 
 
 
 
-const API_BASE = 'https://addons.mozilla.org/api/v5/addons';
+
+const addons_server_api_got = got_dist_source.extend({
+    prefixUrl: 'https://addons.mozilla.org/api/v5/addons',
+    headers: {
+        Authorization: `JWT ${token(core.getInput('jwtIssuer'), core.getInput('jwtSecret'))}`
+    }
+});
 function token(userId, secret) {
     const issuedAt = Math.floor(Date.now() / 1000);
     return jsonwebtoken.sign({
@@ -17976,7 +17971,7 @@ function upload(addonId, addon, source) {
     form.append('upload', (0,external_fs_.createReadStream)(addon));
     if (source)
         form.append('source', (0,external_fs_.createReadStream)(source));
-    return lib_got(`${API_BASE}/addon/${encodeURIComponent(addonId)}/versions/`, {
+    return addons_server_api_got(`addon/${encodeURIComponent(addonId)}/versions/`, {
         method: 'post',
         responseType: 'json',
         body: form
@@ -17995,9 +17990,8 @@ const addonFile = core.getInput('addonFile');
 const sourceFile = core.getInput('sourceFile');
 const manifestFile = core.getInput('manifestFile');
 upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it.body))).catch((it) => {
-    core.error(`Url: ${API_BASE}/addon/${encodeURIComponent(addonId)}/versions/`);
+    core.error(`Url: ${it.request.requestUrl}`);
     core.error(it);
-    core.error(JSON.stringify(it.request));
     core.error(JSON.stringify(it.response.body));
 });
 //# sourceMappingURL=index.js.map

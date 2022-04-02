@@ -1,9 +1,15 @@
 import jwt from 'jsonwebtoken';
-import got from './got.js';
 import FormData from 'form-data';
 import {createReadStream, PathLike} from 'fs';
+import _got from 'got'
+import * as core from '@actions/core';
 
-export const API_BASE = 'https://addons.mozilla.org/api/v5/addons'
+const got = _got.extend({
+  prefixUrl: 'https://addons.mozilla.org/api/v5/addons',
+  headers: {
+    Authorization: `JWT ${token(core.getInput('jwtIssuer'), core.getInput('jwtSecret'))}`
+  }
+})
 
 export function token(userId: string, secret: string) {
   const issuedAt = Math.floor(Date.now() / 1000);
@@ -20,7 +26,7 @@ export function upload(addonId: string, addon: PathLike, source?: PathLike) {
   const form = new FormData()
   form.append('upload', createReadStream(addon))
   if (source) form.append('source', createReadStream(source))
-  return got(`${API_BASE}/addon/${encodeURIComponent(addonId)}/versions/`, {
+  return got(`addon/${encodeURIComponent(addonId)}/versions/`, {
     method: 'post',
     responseType: 'json',
     body: form

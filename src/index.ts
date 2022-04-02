@@ -1,4 +1,4 @@
-import {API_BASE, upload} from './addons-server-api.js';
+import {upload} from './addons-server-api.js';
 import * as core from '@actions/core';
 import {PathLike, readFileSync} from 'fs';
 import {HTTPError} from 'got';
@@ -13,8 +13,7 @@ const sourceFile = core.getInput('sourceFile')
 const manifestFile = core.getInput('manifestFile')
 
 upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it.body))).catch((it: HTTPError) => {
-  core.error(`Url: ${API_BASE}/addon/${encodeURIComponent(addonId)}/versions/`)
+  core.error(`Url: ${it.request.requestUrl}`)
   core.error(it)
-  core.error(JSON.stringify(it.request))
   core.error(JSON.stringify(it.response.body))
 })
