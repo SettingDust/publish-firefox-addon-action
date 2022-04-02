@@ -13759,11 +13759,12 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("zlib");
 
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
+  "Ue": () => (/* binding */ addons_server_api_create),
   "ws": () => (/* binding */ upload),
   "RM": () => (/* binding */ uploadDetail)
 });
 
-// UNUSED EXPORTS: create, token
+// UNUSED EXPORTS: token
 
 // EXTERNAL MODULE: ./node_modules/jsonwebtoken/index.js
 var jsonwebtoken = __nccwpck_require__(7486);
@@ -17927,7 +17928,7 @@ function token(userId, secret) {
     }, secret);
 }
 function addons_server_api_create(addonId, uploadId, source) {
-    const form = new FormData();
+    const form = new form_data();
     form.append('upload', uploadId);
     if (source)
         form.append('source', source);
@@ -17972,14 +17973,12 @@ const manifestFile = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('manife
 const channel = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('channel');
 const addonStats = (0,fs__WEBPACK_IMPORTED_MODULE_2__.statSync)(addonFile);
 const sourceStats = (0,fs__WEBPACK_IMPORTED_MODULE_2__.statSync)(sourceFile);
-_actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Addon file stats:`);
-_actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`
+_actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(`Addon file stats:
   Path: ${addonFile}
   isFile: ${addonStats.isFile()}
   Size: ${addonStats.size}`);
 if (sourceFile?.length) {
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Source file stats:`);
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(`Source file stats:
   Path: ${sourceFile}
   isFile: ${sourceStats.isFile()}
   Size: ${sourceStats.size}`);
@@ -17991,7 +17990,6 @@ try {
     await new Promise((resolve, reject) => {
         const task = setInterval(async () => {
             const detail = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .uploadDetail */ .RM)(uploadResponse.uuid);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(JSON.stringify(detail));
             if (detail.valid) {
                 resolve(detail);
                 clearInterval(task);
@@ -18001,8 +17999,8 @@ try {
             }
         }, 500);
     }).catch(validation => _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(`Upload is valid: ${JSON.stringify(validation)}`));
-    // const createResponse = await create(addonId, uploadResponse.uuid, sourceFile?.length ? createReadStream(sourceFile) : undefined)
-    // core.debug(JSON.stringify(createResponse))
+    const createResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .create */ .Ue)(addonId, uploadResponse.uuid, sourceFile?.length ? (0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(sourceFile) : undefined);
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(JSON.stringify(createResponse));
 }
 catch (it) {
     const e = it;

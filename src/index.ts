@@ -16,15 +16,13 @@ const channel = core.getInput('channel')
 const addonStats = statSync(addonFile)
 const sourceStats = statSync(sourceFile)
 
-core.info(`Addon file stats:`)
-core.info(`
+core.debug(`Addon file stats:
   Path: ${addonFile}
   isFile: ${addonStats.isFile()}
   Size: ${addonStats.size}`)
 
 if (sourceFile?.length) {
-  core.info(`Source file stats:`)
-  core.info(`
+  core.debug(`Source file stats:
   Path: ${sourceFile}
   isFile: ${sourceStats.isFile()}
   Size: ${sourceStats.size}`)
@@ -41,7 +39,6 @@ try {
   await new Promise((resolve, reject) => {
     const task = setInterval(async () => {
       const detail = await uploadDetail(uploadResponse.uuid)
-      core.debug(JSON.stringify(detail))
       if (detail.valid) {
         resolve(detail)
         clearInterval(task)
@@ -51,8 +48,8 @@ try {
     }, 500)
   }).catch(validation => core.error(`Upload is valid: ${JSON.stringify(validation)}`))
 
-  // const createResponse = await create(addonId, uploadResponse.uuid, sourceFile?.length ? createReadStream(sourceFile) : undefined)
-  // core.debug(JSON.stringify(createResponse))
+  const createResponse = await create(addonId, uploadResponse.uuid, sourceFile?.length ? createReadStream(sourceFile) : undefined)
+  core.debug(JSON.stringify(createResponse))
 } catch (it) {
   const e = it as HTTPError
   core.error(`Url: ${e.request.requestUrl}`)
