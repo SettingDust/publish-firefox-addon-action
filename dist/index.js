@@ -17993,7 +17993,7 @@ try {
 catch (it) {
     const e = it;
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(`Url: ${e.request.requestUrl}`);
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(`Response: ${e.response.body}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(`Response: ${JSON.stringify(e.response.body, undefined, 2)}`);
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(e);
 }
 //# sourceMappingURL=index.js.map

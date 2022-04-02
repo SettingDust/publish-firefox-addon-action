@@ -43,6 +43,6 @@ try {
 } catch (it) {
   const e = it as HTTPError
   core.error(`Url: ${e.request.requestUrl}`)
-  core.error(`Response: ${e.response.body}`)
+  core.error(`Response: ${JSON.stringify(e.response.body, undefined, 2)}`)
   core.error(e)
 }
