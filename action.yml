@@ -25,3 +25,7 @@ inputs:
   manifestFile:
     required: true
     description: 'manifest.json for fetch version'
+  channel:
+    required: false
+    description: 'Channel to create version. Should be listed or unlisted'
+    default: listed

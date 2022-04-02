@@ -11,6 +11,7 @@ const addonId = core.getInput('addonId')
 const addonFile = core.getInput('addonFile')
 const sourceFile = core.getInput('sourceFile')
 const manifestFile = core.getInput('manifestFile')
+const channel = core.getInput('channel')
 
 const addonStats = statSync(addonFile)
 const sourceStats = statSync(sourceFile)
@@ -30,7 +31,7 @@ if (sourceFile?.length) {
 }
 
 try {
-  const uploadResponse = await upload(createReadStream(addonFile)).json<UploadResponse>()
+  const uploadResponse = await upload(createReadStream(addonFile), channel).json<UploadResponse>()
 
   core.debug(
     `Upload Response:

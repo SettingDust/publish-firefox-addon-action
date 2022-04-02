@@ -17937,9 +17937,10 @@ function addons_server_api_create(addonId, uploadId, source) {
         body: form
     });
 }
-function upload(addon) {
+function upload(addon, channel) {
     const form = new form_data();
     form.append('upload', addon);
+    form.append('channel', channel);
     return addons_server_api_got(`upload/`, {
         method: 'post',
         responseType: 'json',
@@ -17967,6 +17968,7 @@ const addonId = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('addonId');
 const addonFile = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('addonFile');
 const sourceFile = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('sourceFile');
 const manifestFile = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('manifestFile');
+const channel = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('channel');
 const addonStats = (0,fs__WEBPACK_IMPORTED_MODULE_2__.statSync)(addonFile);
 const sourceStats = (0,fs__WEBPACK_IMPORTED_MODULE_2__.statSync)(sourceFile);
 _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Addon file stats:`);
@@ -17982,7 +17984,7 @@ if (sourceFile?.length) {
   Size: ${sourceStats.size}`);
 }
 try {
-    const uploadResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .upload */ .ws)((0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(addonFile)).json();
+    const uploadResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .upload */ .ws)((0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(addonFile), channel).json();
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(`Upload Response:
   ${JSON.stringify(uploadResponse, undefined, 2)}`);
     const createResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .create */ .Ue)(addonId, uploadResponse.uuid, sourceFile?.length ? (0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(sourceFile) : undefined);
