@@ -17976,7 +17976,7 @@ function upload(addonId, addon, source) {
     form.append('upload', (0,external_fs_.createReadStream)(addon));
     if (source)
         form.append('source', (0,external_fs_.createReadStream)(source));
-    return lib_got(`${API_BASE}/${encodeURIComponent(addonId)}/versions/`, {
+    return lib_got(`${API_BASE}/addon/${encodeURIComponent(addonId)}/versions/`, {
         method: 'post',
         responseType: 'json',
         body: form
@@ -17994,7 +17994,7 @@ const addonId = core.getInput('addonId');
 const addonFile = core.getInput('addonFile');
 const sourceFile = core.getInput('sourceFile');
 const manifestFile = core.getInput('manifestFile');
-upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it.body)));
+upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it.body))).catch(it => core.error(it));
 //# sourceMappingURL=index.js.map
 })();
 
