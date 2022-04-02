@@ -13806,8 +13806,6 @@ var __webpack_exports__ = {};
 var jsonwebtoken = __nccwpck_require__(7486);
 // EXTERNAL MODULE: ./node_modules/form-data/lib/form_data.js
 var form_data = __nccwpck_require__(4334);
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(7147);
 // EXTERNAL MODULE: ./node_modules/@sindresorhus/is/dist/index.js
 var dist = __nccwpck_require__(7678);
 ;// CONCATENATED MODULE: external "node:events"
@@ -17949,7 +17947,6 @@ var core = __nccwpck_require__(2186);
 
 
 
-
 const addons_server_api_got = got_dist_source.extend({
     prefixUrl: 'https://addons.mozilla.org/api/v5/addons',
     headers: {
@@ -17968,9 +17965,9 @@ function token(userId, secret) {
 }
 function upload(addonId, addon, source) {
     const form = new form_data();
-    form.append('upload', (0,external_fs_.createReadStream)(addon));
+    form.append('upload', addon);
     if (source)
-        form.append('source', (0,external_fs_.createReadStream)(source));
+        form.append('source', source);
     return addons_server_api_got(`addon/${encodeURIComponent(addonId)}/versions/`, {
         method: 'post',
         responseType: 'json',
@@ -17978,6 +17975,8 @@ function upload(addonId, addon, source) {
     });
 }
 //# sourceMappingURL=addons-server-api.js.map
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(7147);
 ;// CONCATENATED MODULE: ./lib/index.js
 
 
@@ -17989,7 +17988,23 @@ const addonId = core.getInput('addonId');
 const addonFile = core.getInput('addonFile');
 const sourceFile = core.getInput('sourceFile');
 const manifestFile = core.getInput('manifestFile');
-upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it.body))).catch((it) => {
+const addonStats = (0,external_fs_.statSync)(addonFile);
+const sourceStats = (0,external_fs_.statSync)(sourceFile);
+core.info(`Addon file stats:`);
+core.info(`  Path: ${addonFile}
+  isFile: ${addonStats.isFile()}
+  Size: ${addonStats.size}
+`);
+if (sourceFile?.length) {
+    core.info(`Source file stats:`);
+    core.info(`  Path: ${sourceFile}
+  isFile: ${sourceStats.isFile()}
+  Size: ${sourceStats.size}
+`);
+}
+upload(addonId, (0,external_fs_.createReadStream)(addonFile), sourceFile?.length ? (0,external_fs_.createReadStream)(sourceFile) : undefined)
+    .then(it => core.debug(JSON.stringify(it.body)))
+    .catch((it) => {
     core.error(`Url: ${it.request.requestUrl}`);
     core.error(it);
     core.error(JSON.stringify(it.response.body));

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import FormData from 'form-data';
-import {createReadStream, PathLike} from 'fs';
+import {createReadStream, PathLike, ReadStream} from 'fs';
 import _got from 'got'
 import * as core from '@actions/core';
 
@@ -22,10 +22,10 @@ export function token(userId: string, secret: string) {
   }, secret)
 }
 
-export function upload(addonId: string, addon: PathLike, source?: PathLike) {
+export function upload(addonId: string, addon: ReadStream, source?: ReadStream) {
   const form = new FormData()
-  form.append('upload', createReadStream(addon))
-  if (source) form.append('source', createReadStream(source))
+  form.append('upload', addon)
+  if (source) form.append('source', source)
   return got(`addon/${encodeURIComponent(addonId)}/versions/`, {
     method: 'post',
     responseType: 'json',
