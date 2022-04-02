@@ -3,7 +3,7 @@ import got from './got.js';
 import FormData from 'form-data';
 import {createReadStream, PathLike} from 'fs';
 
-const API_BASE = 'https://addons.mozilla.org/api/v5/addons'
+export const API_BASE = 'https://addons.mozilla.org/api/v5/addons'
 
 export function token(userId: string, secret: string) {
   const issuedAt = Math.floor(Date.now() / 1000);

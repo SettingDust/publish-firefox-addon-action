@@ -17994,7 +17994,12 @@ const addonId = core.getInput('addonId');
 const addonFile = core.getInput('addonFile');
 const sourceFile = core.getInput('sourceFile');
 const manifestFile = core.getInput('manifestFile');
-upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it.body))).catch(it => core.error(it));
+upload(addonId, addonFile, sourceFile).then(it => core.debug(JSON.stringify(it.body))).catch(it => {
+    core.info(`Url: ${API_BASE}/addon/${encodeURIComponent(addonId)}/versions/`);
+    core.error(it);
+    core.error(JSON.stringify(it.body));
+    core.error(JSON.stringify(it));
+});
 //# sourceMappingURL=index.js.map
 })();
 
