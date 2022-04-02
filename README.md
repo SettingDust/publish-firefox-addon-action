@@ -2,7 +2,7 @@
 
 ## Usage
 ```yaml
-- uses: SettingDust/publish-firefox-addon-action@v0
+- uses: SettingDust/publish-firefox-addon-action@master
   with:
     addonId: ghostery # slug, guid or number id
     jwtIssuer: ${{ secrets.FIREFOX_JWT_ISSUER }} # Such as user:000000:00
