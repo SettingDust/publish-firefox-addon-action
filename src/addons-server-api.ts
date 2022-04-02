@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import FormData from 'form-data';
-import {createReadStream, PathLike, ReadStream} from 'fs';
+import {ReadStream} from 'fs';
 import _got from 'got'
 import * as core from '@actions/core';
 

@@ -9,5 +9,5 @@
     jwtSecret: ${{ secrets.FIREFOX_JWT_SECRET }}
     addonFile: dist/web-ext-artifacts/addon.zip
     sourceFile: src.zip
-    manifestFile: src/manifest.json
+    channel: unlisted # Optional, default is listed. Should be listed or unlisted
 ```

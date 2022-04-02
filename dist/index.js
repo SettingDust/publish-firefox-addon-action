@@ -17963,13 +17963,9 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 
 
 
-function fetchManifest(file) {
-    return JSON.parse(readFileSync(file, { encoding: 'utf-8' }));
-}
 const addonId = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('addonId');
 const addonFile = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('addonFile');
 const sourceFile = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('sourceFile');
-const manifestFile = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('manifestFile');
 const channel = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('channel');
 const addonStats = (0,fs__WEBPACK_IMPORTED_MODULE_2__.statSync)(addonFile);
 const sourceStats = (0,fs__WEBPACK_IMPORTED_MODULE_2__.statSync)(sourceFile);
@@ -17986,7 +17982,7 @@ if (sourceFile?.length) {
 try {
     const uploadResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .upload */ .ws)((0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(addonFile), channel).json();
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(`Upload Response:
-  ${JSON.stringify(uploadResponse, undefined, '  ')}`);
+  ${JSON.stringify(uploadResponse, undefined)}`);
     await new Promise((resolve, reject) => {
         const task = setInterval(async () => {
             const detail = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .uploadDetail */ .RM)(uploadResponse.uuid);
@@ -18000,7 +17996,7 @@ try {
         }, 500);
     }).catch(validation => _actions_core__WEBPACK_IMPORTED_MODULE_1__.error(`Upload is valid: ${JSON.stringify(validation)}`));
     const createResponse = await (0,_addons_server_api_js__WEBPACK_IMPORTED_MODULE_0__/* .create */ .Ue)(addonId, uploadResponse.uuid, sourceFile?.length ? (0,fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream)(sourceFile) : undefined);
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(JSON.stringify(createResponse));
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.debug(`Create response: ${JSON.stringify(createResponse)}`);
 }
 catch (it) {
     const e = it;
